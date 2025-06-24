@@ -1,26 +1,18 @@
 from rest_framework import routers
+
+from django.urls import path
+from .views import CustomTokenObtainPairView
+from django.urls import path,include
+from .views import AgenteViewSet,UsuarioViewSet,PropiedadViewSet, LogoutView, RegisterView
 router = routers.DefaultRouter()
 
-from django.urls import path,include
-from .views import AgenteViewSet,UsuarioViewSet,PropiedadViewSet
-
-
 router.register('api/agentes',AgenteViewSet)
-
-
-agente_list = AgenteViewSet.as_view({
-    'get': 'list',      # GET /api/agentes/
-    'post': 'create'    # POST /api/agentes/
-})
-
-agente_detail = AgenteViewSet.as_view({
-    'get': 'show',     # GET /api/agentes/<id>/
-    'put': 'update',       # PUT /api/agentes/<id>/
-    'delete': 'destroy'    # DELETE /api/agentes/<id>/
-})
 router.register('api/usuarios',UsuarioViewSet)
 router.register('api/propiedad',PropiedadViewSet)
 
 urlpatterns = [
     path('',include(router.urls)),
+    path('api/login/', CustomTokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('api/logout/', LogoutView.as_view(), name='logout'),
+    path('api/register/', RegisterView.as_view(), name='register'),
 ]
