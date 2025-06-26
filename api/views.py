@@ -8,6 +8,11 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework import status
+from django.core.cache import cache 
+from rest_framework.exceptions import AuthenticationFailed
+import requests
+
+
 
 class AgenteViewSet(viewsets.ModelViewSet):
     queryset = Agente.objects.all()
@@ -21,9 +26,23 @@ class PropiedadViewSet(viewsets.ModelViewSet):
     queryset = Propiedad.objects.all()
     serializer_class = PropiedadSerilizer
 class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
-    def validate(self, attrs):
-        data = super().validate(attrs)
 
+    def validate(self, attrs):
+    
+        username = attrs.get("username")
+
+        cache_key = f"login_attempts_{username}"
+
+        attemps = cache.get(cache_key, 0)
+        if attemps >= 3:
+           raise AuthenticationFailed("Cuenta temporalmente bloqueada por múltiples intentos fallidos.")
+        
+        try:
+            data = super().validate(attrs)
+        except AuthenticationFailed:
+           cache.set(cache_key,attemps +1, timeout=60*5)
+           raise AuthenticationFailed("Credenciales incorrectas. Intento fallido.")
+        cache.delete(cache_key)
         # Añadir datos del usuario extra
         user = self.user
         try:
@@ -39,6 +58,9 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
             data['email'] = user.email
 
         return data
+
+class CustomTokenObtainPairView(TokenObtainPairView):
+    serializer_class = CustomTokenObtainPairSerializer
 
 class CustomTokenObtainPairView(TokenObtainPairView):
     serializer_class = CustomTokenObtainPairSerializer
@@ -79,6 +101,33 @@ class RegisterView(APIView):
         }, status=status.HTTP_201_CREATED)
 
 
+class EnviarMensajeWhatsApp(APIView):
+    def post(self, request):
+        numero_destino = request.data.get("numero")  # formato internacional, ej: 59171234567
+        mensaje = request.data.get("mensaje")
 
+        token = "TU_TOKEN_DE_ACCESO"
+        telefono_id = "TU_PHONE_NUMBER_ID"
+
+        url = f"https://graph.facebook.com/v19.0/{telefono_id}/messages"
+
+        headers = {
+            "Authorization": f"Bearer {token}",
+            "Content-Type": "application/json",
+        }
+
+        data = {
+            "messaging_product": "whatsapp",
+            "to": numero_destino,
+            "type": "text",
+            "text": {"body": mensaje},
+        }
+
+        response = requests.post(url, headers=headers, json=data)
+
+        if response.status_code == 200:
+            return Response({"detalle": "Mensaje enviado"}, status=status.HTTP_200_OK)
+        else:
+            return Response(response.json(), status=response.status_code)
 
 

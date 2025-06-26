@@ -76,12 +76,31 @@ WSGI_APPLICATION = 'tecnico_medio.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
+# SQLite Configuration (Default - for development)
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
+# SQL Server Configuration (Uncomment to use)
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'mssql',
+#         'NAME': 'your_database_name',
+#         'USER': 'your_username',
+#         'PASSWORD': 'your_password',
+#         'HOST': 'your_server_host',  # e.g., 'localhost' or '192.168.1.100'
+#         'PORT': '1433',              # Default SQL Server port
+#         'OPTIONS': {
+#             'driver': 'ODBC Driver 17 for SQL Server',  # or 'ODBC Driver 18 for SQL Server'
+#             'trusted_connection': False,  # Set to True for Windows Authentication
+#             'encrypt': True,             # Enable encryption
+#             'trust_server_certificate': True,  # Trust self-signed certificates
+#         },
+#     }
+# }
 
 
 # Password validation

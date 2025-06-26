@@ -3,7 +3,7 @@ from rest_framework import routers
 from django.urls import path
 from .views import CustomTokenObtainPairView
 from django.urls import path,include
-from .views import AgenteViewSet,UsuarioViewSet,PropiedadViewSet, LogoutView, RegisterView
+from .views import AgenteViewSet,UsuarioViewSet,PropiedadViewSet, LogoutView, RegisterView, EnviarMensajeWhatsApp
 router = routers.DefaultRouter()
 
 router.register('api/agentes',AgenteViewSet)
@@ -15,4 +15,5 @@ urlpatterns = [
     path('api/login/', CustomTokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/logout/', LogoutView.as_view(), name='logout'),
     path('api/register/', RegisterView.as_view(), name='register'),
+    path('api/whatsapp/send/', EnviarMensajeWhatsApp.as_view(), name='enviar_whatsapp'),
 ]

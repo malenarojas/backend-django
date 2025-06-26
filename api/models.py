@@ -7,14 +7,14 @@ class Agente(models.Model):
     correo = models.EmailField(unique=True)
     telefono = models.CharField(max_length=20)
     
-    def __srt__(self):
+    def __str__(self):
         return self.nombre
     
 
 class Usuario(models.Model):
-    user = models.OneToOneField(User, on_delete= models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
     telefono = models.CharField(max_length=20)
-    direccion =models.CharField(max_length=200)
+    direccion = models.CharField(max_length=200)
     def __str__(self):
         return self.user.username
     
