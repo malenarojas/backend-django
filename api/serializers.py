@@ -22,6 +22,7 @@ class AgenteSerilizer(serializers.ModelSerializer):
             'correo',
             'telefono'
         ]
+        
 class PropiedadSerilizer(serializers.ModelSerializer):
      agente = serializers.PrimaryKeyRelatedField(queryset=Agente.objects.all(), write_only=True)
      propietario = serializers.PrimaryKeyRelatedField(queryset=Usuario.objects.all(), write_only=True)

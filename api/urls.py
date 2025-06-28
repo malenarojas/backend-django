@@ -3,10 +3,10 @@ from rest_framework import routers
 from django.urls import path
 from .views import CustomTokenObtainPairView
 from django.urls import path,include
-from .views import AgenteViewSet,UsuarioViewSet,PropiedadViewSet, LogoutView, RegisterView, EnviarMensajeWhatsApp
+from .views import AgenteViewSet ,UsuarioViewSet,PropiedadViewSet, LogoutView, RegisterView, EnviarMensajeWhatsApp
 router = routers.DefaultRouter()
 
-router.register('api/agentes',AgenteViewSet)
+router.register('api/agentes', AgenteViewSet)
 router.register('api/usuarios',UsuarioViewSet)
 router.register('api/propiedad',PropiedadViewSet)
 

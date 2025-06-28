@@ -77,10 +77,21 @@ WSGI_APPLICATION = 'tecnico_medio.wsgi.application'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
 # SQLite Configuration (Default - for development)
+# DATABASES = {
+  #  'default': {
+ #       'ENGINE': 'django.db.backends.sqlite3',
+ #       'NAME': BASE_DIR / 'db.sqlite3',
+ #   }
+#}
+
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": "backenddjango",
+        "USER": "backenddjango_user",
+        "PASSWORD": "5O7kCyYbSohjgJ2lY522WiQq2pQSrfNf",
+        "HOST": "dpg-d1g51fali9vc73a98bgg-a",
+        "PORT": "5432",
     }
 }
 
