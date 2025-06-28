@@ -1,0 +1,1 @@
+web: gunicorn tecnico_medio.wsgi:application 
