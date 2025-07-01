@@ -10,6 +10,7 @@ class Agente(models.Model):
     def __str__(self):
         return self.nombre
     
+
 class Usuario(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     telefono = models.CharField(max_length=20)
@@ -26,16 +27,5 @@ class Propiedad(models.Model):
     def __str__(self):
         return self.titulo
     
-
-    
-class detalleventa(models.Model):
-    nombre = models.TextField()
-    descripcion = models.TextField()
-    precio = models.DecimalField(max_digits=10, decimal_places=2)
-
-    venta = models.ForeignKey(Venta, on_delete=models.CASCADE, related_name='propiedades')
-    producto = models.ForeignKey(Producto, on_delete=models.CASCADE, related_name='propiedades')
-    def __str__(self):
-        return self.nombre    
 
         
