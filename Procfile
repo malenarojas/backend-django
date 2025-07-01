@@ -1,1 +1,1 @@
-web: gunicorn tecnico_medio.wsgi:application 
+web: python -m gunicorn tecnico_medio.asgi:application -k uvicorn.workers.UvicornWorker 

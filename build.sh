@@ -1,15 +1,15 @@
 #!/usr/bin/env bash
-# exit on error
+# Exit on error
 set -o errexit
 
-# Install dependencies
-pip install -r requeriments.txt
+# Modify this line as needed for your package manager (pip, poetry, etc.)
+pip install -r requirements.txt
 
-# Collect static files
+# Convert static asset files
 python manage.py collectstatic --no-input
 
-# Run migrations
+# Apply any outstanding database migrations//migro las tablas 
 python manage.py migrate
 
-# Load seed data (optional)
+# Load seed data (optional)//lo que contiene las tablas
 python manage.py seed_data 

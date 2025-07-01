@@ -23,16 +23,21 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = config('SECRET_KEY', default='django-insecure-eqeap(_ijdr2-36r%temo=u7&y!l25+s@%ga#j772g!qm5-30t')
+SECRET_KEY = os.environ.get('SECRET_KEY', default=config('SECRET_KEY', default='django-insecure-eqeap(_ijdr2-36r%temo=u7&y!l25+s@%ga#j772g!qm5-30t'))
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = config('DEBUG', default=True, cast=bool)
+DEBUG = 'RENDER' not in os.environ
 
-ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='api,127.0.0.1,localhost', cast=lambda v: [s.strip() for s in v.split(',')])
+ALLOWED_HOSTS = []
 
-# Add render.com domain for production
-if not DEBUG:
-    ALLOWED_HOSTS.extend(['*.onrender.com'])
+# Get the external hostname from Render
+RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
+if RENDER_EXTERNAL_HOSTNAME:
+    ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
+
+# For local development
+if DEBUG:
+    ALLOWED_HOSTS.extend(['127.0.0.1', 'localhost', 'api'])
 
 
 # Application definition
@@ -84,27 +89,13 @@ WSGI_APPLICATION = 'tecnico_medio.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-# Use DATABASE_URL environment variable if available (for production)
-if config('DATABASE_URL', default=None):
-    DATABASES = {
-        'default': dj_database_url.config(
-            default=config('DATABASE_URL'),
-            conn_max_age=600,
-            conn_health_checks=True,
-        )
-    }
-else:
-    # PostgreSQL Configuration (development/manual setup)
-    DATABASES = {
-        "default": {
-            "ENGINE": "django.db.backends.postgresql",
-            "NAME": config('DB_NAME', default="backenddjango"),
-            "USER": config('DB_USER', default="backenddjango_user"),
-            "PASSWORD": config('DB_PASSWORD', default="5O7kCyYbSohjgJ2lY522WiQq2pQSrfNf"),
-            "HOST": config('DB_HOST', default="dpg-d1g51fali9vc73a98bgg-a"),
-            "PORT": config('DB_PORT', default="5432"),
-        }
-    }
+DATABASES = {
+    'default': dj_database_url.config(
+        # Replace this value with your local database's connection string.
+        default='postgresql://postgres:postgres@localhost:5432/tecnico_medio',
+        conn_max_age=600
+    )
+}
 
 # SQLite Configuration (Fallback for local development)
 # Uncomment if you want to use SQLite locally
@@ -168,11 +159,18 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
+# This setting informs Django of the URI path from which your static files will be served to users
+# Here, they well be accessible at your-domain.onrender.com/static/... or yourcustomdomain.com/static/...
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
-# WhiteNoise configuration for serving static files in production
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+# This production code might break development mode, so we check whether we're in DEBUG mode
+if not DEBUG:
+    # Tell Django to copy static assets into a path called `staticfiles` (this is specific to Render)
+    STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+    
+    # Enable the WhiteNoise storage backend, which compresses static files to reduce disk use
+    # and renames the files with unique names for each version to support long-term caching
+    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Media files
 MEDIA_URL = '/media/'
