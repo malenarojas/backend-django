@@ -28,7 +28,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY', default=config('SECRET_KEY', default='
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = 'RENDER' not in os.environ
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['backend-django-yv3n.onrender.com']
 
 # Get the external hostname from Render
 RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
@@ -37,7 +37,7 @@ if RENDER_EXTERNAL_HOSTNAME:
 
 # For local development
 if DEBUG:
-    ALLOWED_HOSTS.extend(['127.0.0.1', 'localhost', 'api'])
+    ALLOWED_HOSTS.extend(['127.0.0.1', 'localhost', 'api','backend-django-yv3n.onrender.com'])
 
 
 # Application definition
