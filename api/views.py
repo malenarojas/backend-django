@@ -33,14 +33,14 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
 
         cache_key = f"login_attempts_{username}"
 
-        attemps = cache.get(cache_key, 0)
-        if attemps >= 3:
+        attempts = cache.get(cache_key, 0)
+        if attempts >= 3:
            raise AuthenticationFailed("Cuenta temporalmente bloqueada por múltiples intentos fallidos.")
         
         try:
             data = super().validate(attrs)
         except AuthenticationFailed:
-           cache.set(cache_key,attemps +1, timeout=60*5)
+           cache.set(cache_key,attempts +1, timeout=60*5)
            raise AuthenticationFailed("Credenciales incorrectas. Intento fallido.")
         cache.delete(cache_key)
         # Añadir datos del usuario extra
@@ -58,9 +58,6 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
             data['email'] = user.email
 
         return data
-
-class CustomTokenObtainPairView(TokenObtainPairView):
-    serializer_class = CustomTokenObtainPairSerializer
 
 class CustomTokenObtainPairView(TokenObtainPairView):
     serializer_class = CustomTokenObtainPairSerializer
