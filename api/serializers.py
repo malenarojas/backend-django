@@ -3,7 +3,7 @@ from .models import Agente
 from .models import Propiedad
 from .models import Usuario
 
-class UsuarioSerilizer(serializers.ModelSerializer):
+class UsuarioSerializer(serializers.ModelSerializer):
     class Meta:
         model= Usuario
         fields =[
@@ -13,7 +13,7 @@ class UsuarioSerilizer(serializers.ModelSerializer):
             'direccion'
         ]
 
-class AgenteSerilizer(serializers.ModelSerializer):
+class AgenteSerializer(serializers.ModelSerializer):
     class Meta:
         model= Agente 
         fields =[
@@ -23,7 +23,7 @@ class AgenteSerilizer(serializers.ModelSerializer):
             'telefono'
         ]
         
-class PropiedadSerilizer(serializers.ModelSerializer):
+class PropiedadSerializer(serializers.ModelSerializer):
      agente = serializers.PrimaryKeyRelatedField(queryset=Agente.objects.all(), write_only=True)
      propietario = serializers.PrimaryKeyRelatedField(queryset=Usuario.objects.all(), write_only=True)
      class Meta:

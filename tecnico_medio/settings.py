@@ -37,7 +37,7 @@ if RENDER_EXTERNAL_HOSTNAME:
 
 # For local development
 if DEBUG:
-    ALLOWED_HOSTS.extend(['127.0.0.1', 'localhost', 'api','backend-django-yv3n.onrender.com'])
+    ALLOWED_HOSTS.extend(['127.0.0.1', 'localhost', 'api'])
 
 
 # Application definition
